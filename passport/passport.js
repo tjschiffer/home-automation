@@ -5,7 +5,6 @@ const argon2 = require('argon2');
 const dbconfig = require('../config/database');
 
 const connection = mysql.createConnection(dbconfig.connection);
-connection.query('USE ' + dbconfig.database);
 // expose this function to our app using module.exports
 module.exports = function(passport) {
   // Passport needs ability to serialize and unserialize users out of session

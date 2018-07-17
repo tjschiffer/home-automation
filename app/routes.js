@@ -89,11 +89,11 @@ module.exports = (app, passport) => {
   app.post('/api/insert',
     isLoggedIn,
     (req, res) => {
-      timeSeriesData.insertData(req.body, (err, insertedRow) => {
+      timeSeriesData.insertData(req.body, (err, insertedRows) => {
         if (err) {
           return res.send({ success: false,  error: err });
         }
-        return res.send({ success: true, insertedRow: insertedRow});
+        return res.send({ success: true, insertedRows: insertedRows});
       });
   });
   
