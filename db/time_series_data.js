@@ -8,17 +8,16 @@ const insertQuery = "INSERT INTO " + dbconfig.time_series_data_table + " (sensor
 
 module.exports = {
   insertData: (insertRows, done) => {
-    insertRows.forEach((insertParameters, index) => {
-      if(!insertParameters.sensor_id || !insertParameters.timestamp || !insertParameters.value) {
-        return done(`Missing required parameters in row ${index}: ${JSON.encode(insertParameters)}`);
-      }
-    });
-
     // Use async/await to insert all rows since yesql does not have batch insert
     // see: https://github.com/krisajenkins/yesql/pull/135
     // This runs sequential; not a performance concern at the moment, refactor for performance if necessary
-    insertRows.reduce(async(previousPromise, insertParameters) => {
+    insertRows.reduce(async(previousPromise, insertParameters, index) => {
       const insertedRows = await previousPromise;
+
+      if(!insertParameters.sensor_id || !insertParameters.timestamp || !insertParameters.value) {
+        insertedRows.push(`Missing required parameters in row ${index}: ${JSON.stringify(insertParameters)}`);
+        return insertedRows;
+      }
       const insertedRow = await new Promise(resolve => {
         connection.query(named(insertQuery)(insertParameters), (err, result) => {
           if (err) {
