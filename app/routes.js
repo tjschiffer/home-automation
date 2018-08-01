@@ -86,7 +86,7 @@ module.exports = (app, passport) => {
       })(req, res, next);
   });
   
-  app.post('/api/insert',
+  app.put('/api/insert',
     isLoggedIn,
     (req, res) => {
       timeSeriesData.insertData(req.body, (err, insertedRows) => {
