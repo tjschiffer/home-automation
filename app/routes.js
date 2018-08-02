@@ -37,22 +37,22 @@ module.exports = (app, passport) => {
       })(req, res, next);
   });
 
-  // Signup form
-  app.get(urls.signup, (req, res) => {
-    // render the page and pass in any flash data if it exists
-    res.render('signup.ejs', { message: req.flash('signupMessage') });
-  });
-
-  // Submission of signup form
-  app.post(urls.signup,
-    passport.authenticate('local-signup', {
-      failureRedirect : urls.signup, // redirect back to the signup page if there is an error
-      failureFlash : true // allow flash messages
-    }), (req, res) => {
-      // If the query string has a redirectUrl, else go to dashboard
-      res.redirect(req.query.redirectUrl || urls.dashboard);
-    }
-  );
+  // // Signup form
+  // app.get(urls.signup, (req, res) => {
+  //   // render the page and pass in any flash data if it exists
+  //   res.render('signup.ejs', { message: req.flash('signupMessage') });
+  // });
+  //
+  // // Submission of signup form
+  // app.post(urls.signup,
+  //   passport.authenticate('local-signup', {
+  //     failureRedirect : urls.signup, // redirect back to the signup page if there is an error
+  //     failureFlash : true // allow flash messages
+  //   }), (req, res) => {
+  //     // If the query string has a redirectUrl, else go to dashboard
+  //     res.redirect(req.query.redirectUrl || urls.dashboard);
+  //   }
+  // );
 
   // Use isLoggedIn middleware
   app.get(urls.dashboard,
