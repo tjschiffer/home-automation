@@ -3,7 +3,7 @@ const dbconfig = require('../config/database');
 
 const connection = mysql.createConnection(dbconfig.connection);
 
-connection.query('DROP DATABASE ' + dbconfig.connection.database);
+connection.query('DROP DATABASE ' + dbconfig.connection.database + ' IF EXISTS');
 connection.query('CREATE DATABASE ' + dbconfig.connection.database);
 
 connection.query('CREATE TABLE `' + dbconfig.connection.database + '`.`' + dbconfig.users_table + '` ( \
