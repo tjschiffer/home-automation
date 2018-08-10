@@ -2,9 +2,11 @@ const mysql = require('mysql');
 const dbconfig = require('../config/database');
 
 async function create_database() {
+  // TODO: This would be cleaner as an reduce with an array of commands to be executed
   const connection = mysql.createConnection(dbconfig.connection);
-  await new Promise(resolve => {
-    connection.query('DROP DATABASE ' + dbconfig.connection.database + ' IF EXISTS', (err) => {
+  let err;
+  err = await new Promise(resolve => {
+    connection.query('DROP DATABASE IF EXISTS `' + dbconfig.connection.database + '`', (err) => {
       if (err) {
         resolve(err);
       } else {
@@ -12,9 +14,12 @@ async function create_database() {
       }
     });
   });
+  if (err) {
+    return err;
+  }
 
-  await new Promise(resolve => {
-    connection.query('CREATE DATABASE ' + dbconfig.connection.database, (err) => {
+  err = await new Promise(resolve => {
+    connection.query('CREATE DATABASE `' + dbconfig.connection.database + '`', (err) => {
       if (err) {
         resolve(err);
       } else {
@@ -22,8 +27,11 @@ async function create_database() {
       }
     });
   });
+  if (err) {
+    return err;
+  }
 
-  await new Promise(resolve => {
+  err = await new Promise(resolve => {
     connection.query('CREATE TABLE `' + dbconfig.connection.database + '`.`' + dbconfig.users_table + '` ( \
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT, \
     `username` VARCHAR(20) NOT NULL, \
@@ -39,8 +47,11 @@ async function create_database() {
         }
       });
   });
+  if (err) {
+    return err;
+  }
 
-  await new Promise(resolve => {
+  err = await new Promise(resolve => {
     connection.query('INSERT INTO `' + dbconfig.connection.database + '`.`' + dbconfig.users_table + '` \
     (`username`, `password_hash`) \
     VALUES \
@@ -54,8 +65,11 @@ async function create_database() {
         }
       });
   });
+  if (err) {
+    return err;
+  }
 
-  await new Promise(resolve => {
+  err = await new Promise(resolve => {
     connection.query('CREATE TABLE `' + dbconfig.connection.database + '`.`' + dbconfig.time_series_data_table + '` ( \
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT, \
     `sensor_id` SMALLINT UNSIGNED NOT NULL, \
@@ -71,10 +85,14 @@ async function create_database() {
         }
       });
   });
+  if (err) {
+    return err;
+  }
 
   connection.end();
+  return 'Success!';
 }
 
-create_database().then(() => {
-  console.log('Success!');
+create_database().then((result) => {
+  console.log(result);
 });
