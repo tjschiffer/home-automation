@@ -44,6 +44,7 @@ async function create_database() {
     connection.query('INSERT INTO `' + dbconfig.connection.database + '`.`' + dbconfig.users_table + '` \
     (`username`, `password_hash`) \
     VALUES \
+    (\'tj\', \'$argon2i$v=19$m=4096,t=3,p=1$sOr9QWi2qUsHG4nb0/13yQ$kRP8u3MHBRHzKtUmUIFXh01qZMVP+V1Nfdsts1xBWSM\'), \
     (\'api\', \'$argon2i$v=19$m=4096,t=3,p=1$gZv4zQqByDmPWwccHdanrA$IcN7WyV1TrkRPIeteKzK0cHNEUd6EDYC1MGEdwV+4lw\')',
       (err) => {
         if (err) {
