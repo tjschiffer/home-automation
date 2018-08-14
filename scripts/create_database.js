@@ -1,9 +1,13 @@
 const mysql = require('mysql');
 const dbconfig = require('../config/database');
 
-async function create_database() {
+async function createDatabase() {
   // TODO: This would be cleaner as an reduce with an array of commands to be executed
-  const connection = mysql.createConnection(dbconfig.connection);
+  const connectionConfig = Object.assign({}, dbconfig.connection);
+  // The database cannot be defined, since this scripts creates that database
+  delete connectionConfig['database'];
+  const connection = mysql.createConnection(connectionConfig);
+
   let err;
   err = await new Promise(resolve => {
     connection.query('DROP DATABASE IF EXISTS `' + dbconfig.connection.database + '`', (err) => {
@@ -93,6 +97,6 @@ async function create_database() {
   return 'Success!';
 }
 
-create_database().then((result) => {
+createDatabase().then((result) => {
   console.log(result);
 });
