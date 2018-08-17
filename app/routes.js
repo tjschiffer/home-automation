@@ -13,6 +13,11 @@ module.exports = (app, passport) => {
 
   // Login
   app.get(urls.login, (req, res) => {
+    // If they are already authenticated, redirect to redirect url or dashboard
+    if (req.isAuthenticated()) {
+      res.redirect(req.query.redirectUrl || urls.dashboard);
+    }
+
     // render the page and pass in any flash data if it exists
     res.render('login.ejs', { message: req.flash('loginMessage') });
   });
@@ -32,8 +37,13 @@ module.exports = (app, passport) => {
         } else {
          req.session.cookie.expires = false;
         }
-        // If the query string has a redirectUrl, else go to dashboard
-        res.redirect(req.query.redirectUrl || urls.dashboard);
+        req.logIn(user, err => {
+          if (err) {
+            return next(err);
+          }
+          // If the query string has a redirectUrl, else go to dashboard
+          res.redirect(req.query.redirectUrl || urls.dashboard);
+        });
       })(req, res, next);
   });
 
@@ -121,6 +131,7 @@ module.exports = (app, passport) => {
 // Check if the user is logged in
 function isLoggedIn(req, res, next) {
   const isAuthenticated = req.isAuthenticated();
+  console.log('I am auth? ' + isAuthenticated);
 
   // if user is authenticated in the session or this is the login page
   if (isAuthenticated || req.route.path === urls.login) {
