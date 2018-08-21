@@ -1,7 +1,9 @@
 const buildUrl = require('build-url');
 const querystring = require('querystring');
 const urls = require('./urls');
-const timeSeriesData = require('../db/time_series_data');
+const timeSeriesData = require('../db/time-series-data');
+
+const dashboardController = require('../controllers/dashboard-controller');
 
 // app/routes.js
 module.exports = (app, passport) => {
@@ -67,9 +69,8 @@ module.exports = (app, passport) => {
   // Use isLoggedIn middleware
   app.get(urls.dashboard,
     isLoggedIn,
-    (req, res) => {
-    res.send('WELCOME');
-  });
+    dashboardController
+  );
 
   // Logout
   app.get(urls.logout, (req, res) => {
@@ -131,7 +132,6 @@ module.exports = (app, passport) => {
 // Check if the user is logged in
 function isLoggedIn(req, res, next) {
   const isAuthenticated = req.isAuthenticated();
-  console.log('I am auth? ' + isAuthenticated);
 
   // if user is authenticated in the session or this is the login page
   if (isAuthenticated || req.route.path === urls.login) {

@@ -1,5 +1,12 @@
 {
   "name": "home-automation",
+  "description": "Home automaton site.",
+  "author": "T.J. Schiffer",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjschiffer/home-automation.git"
+  },
   "main": "server.js",
   "scripts": {
     "start": "node ./server"
